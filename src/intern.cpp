@@ -54,6 +54,15 @@ void setup() {
   lcd.setBacklight(WHITE);
 }
 
+void printUsr(String name) {
+  lcd.print(tempUsr + cur->getName());
+}
+
+void printPoints(int points) {
+
+}
+
+
 uint8_t i=0;
 void loop() {
   uint8_t buttons = lcd.readButtons();
