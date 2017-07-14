@@ -59,9 +59,16 @@ void printUsr(String name) {
 }
 
 void printPoints(int points) {
-
+  lcd.print(tempPts + cur->getPoints());
 }
 
+void printScreen() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  printUsr(cur->getName());
+  lcd.setCursor(0, 1);
+  printPoints(cur->getPoints());
+}
 
 uint8_t i=0;
 void loop() {
@@ -72,28 +79,29 @@ void loop() {
     lcd.setCursor(0,0);
     if (buttons & BUTTON_UP) {
       cur->addPoints();
-      lcd.setCursor(0,1);
-      lcd.print(tempPts + cur->getPoints());
+      printScreen();
       lcd.setBacklight(GREEN);
     }
     if (buttons & BUTTON_DOWN) {
       cur->subtractPoints();
-      lcd.setCursor(0,1);
-      lcd.print(tempPts + cur->getPoints());
+      printScreen();
       lcd.setBacklight(RED);
     }
     if (buttons & BUTTON_LEFT) {
-      lcd.setCursor(0, 0);
-      lcd.print(tempUsr + cur->getName());
-      lcd.setBacklight(GREEN);
-    }
-    if (buttons & BUTTON_RIGHT) {
-      lcd.print("RIGHT ");
+      //toggleUser();
+      printScreen();
       lcd.setBacklight(TEAL);
     }
+    if (buttons & BUTTON_RIGHT) {
+      //toggleUser();
+      printScreen();
+      lcd.setBacklight(TEAL);
+    }
+    /*
     if (buttons & BUTTON_SELECT) {
       lcd.print("SELECT ");
       lcd.setBacklight(VIOLET);
     }
+    */
   }
 }
