@@ -13,6 +13,7 @@ When a button is pressed, the backlight changes color.
 #include <utility/Adafruit_MCP23017.h>
 #include <Arduino.h>
 #include <User.cpp>
+#include <EEPROM.h>
 
 // The shield uses the I2C SCL and SDA pins. On classic Arduinos
 // this is Analog 4 and 5 so you can't use those for analogRead() anymore
@@ -38,24 +39,6 @@ String tempPts = "Points = ";
 String tempWin = "Sr. ";
 String tempLoser = "Jr. ";
 
-void setup() {
-  // Debugging output
-  Serial.begin(9600);
-  // set up the LCD's number of columns and rows:
-  lcd.begin(16, 2);
-
-  matt = *(new User("Matt"));
-  jimmy = *(new User("Jimmy"));
-  cur = &(jimmy);
-  // Print a message to the LCD. We track how long it takes since
-  // this library has been optimized a bit and we're proud of it :)
-  int time = millis();
-  lcd.print(tempUsr + cur->getName());
-  time = millis() - time;
-  Serial.print("Took "); Serial.print(time); Serial.println(" ms");
-  lcd.setBacklight(WHITE);
-}
-
 void printUsr(String name) {
   lcd.print(tempUsr + cur->getName());
 }
@@ -77,13 +60,13 @@ void toggleUser() {
     cur = &matt;
   } else {
     cur = &jimmy;
-}
+  }
 }
 
 void showLeader(){
   lcd.clear();
   lcd.setCursor(0, 0);
-  if(jimmy.getPoints() > matt.getPoints()){
+  if(jimmy.getPoints() >= matt.getPoints()){
     lcd.print(tempWin + jimmy.getName() + " " + jimmy.getPoints() );
     lcd.setCursor(0, 1);
     lcd.print(tempLoser + matt.getName() + " " + matt.getPoints() );
@@ -95,6 +78,28 @@ void showLeader(){
 
 }
 
+void setup() {
+  // Debugging output
+  Serial.begin(9600);
+  // set up the LCD's number of columns and rows:
+  Serial.print("Setup");
+  lcd.begin(16, 2);
+
+  jimmy = *(new User("Jimmy", 0));
+  matt = *(new User("Matt", sizeof(int)*2));
+
+  //jimmy.reset();
+  //matt.reset();
+
+  cur = &(jimmy);
+  // Print a message to the LCD. We track how long it takes since
+  // this library has been optimized a bit and we're proud of it :)
+  int time = millis();
+  printScreen();
+  time = millis() - time;
+  Serial.print("Took "); Serial.print(time); Serial.println(" ms");
+  lcd.setBacklight(WHITE);
+}
 
 uint8_t i=0;
 void loop() {
