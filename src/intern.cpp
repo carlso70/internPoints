@@ -35,6 +35,8 @@ User* cur;
 
 String tempUsr = "User = ";
 String tempPts = "Points = ";
+String tempWin = "Sr. ";
+String tempLoser = "Jr. ";
 
 void setup() {
   // Debugging output
@@ -43,7 +45,7 @@ void setup() {
   lcd.begin(16, 2);
 
   matt = *(new User("Matt"));
-  jimmy = *(new User("jimmy"));
+  jimmy = *(new User("Jimmy"));
   cur = &(jimmy);
   // Print a message to the LCD. We track how long it takes since
   // this library has been optimized a bit and we're proud of it :)
@@ -70,6 +72,30 @@ void printScreen() {
   printPoints(cur->getPoints());
 }
 
+void toggleUser() {
+  if(cur == &jimmy) {
+    cur = &matt;
+  } else {
+    cur = &jimmy;
+}
+}
+
+void showLeader(){
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  if(jimmy.getPoints() > matt.getPoints()){
+    lcd.print(tempWin + jimmy.getName() + " " + jimmy.getPoints() );
+    lcd.setCursor(0, 1);
+    lcd.print(tempLoser + matt.getName() + " " + matt.getPoints() );
+  } else {
+    lcd.print(tempWin + matt.getName() + " " + matt.getPoints() );
+    lcd.setCursor(0, 1);
+    lcd.print(tempLoser + jimmy.getName() + " " + jimmy.getPoints() );
+  }
+
+}
+
+
 uint8_t i=0;
 void loop() {
   uint8_t buttons = lcd.readButtons();
@@ -88,20 +114,19 @@ void loop() {
       lcd.setBacklight(RED);
     }
     if (buttons & BUTTON_LEFT) {
-      //toggleUser();
+      toggleUser();
       printScreen();
       lcd.setBacklight(TEAL);
     }
     if (buttons & BUTTON_RIGHT) {
-      //toggleUser();
+      toggleUser();
       printScreen();
       lcd.setBacklight(TEAL);
     }
-    /*
+
     if (buttons & BUTTON_SELECT) {
-      lcd.print("SELECT ");
+      showLeader();
       lcd.setBacklight(VIOLET);
     }
-    */
   }
 }
